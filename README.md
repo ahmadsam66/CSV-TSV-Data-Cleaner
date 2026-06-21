@@ -291,10 +291,58 @@ This tool is ideal for:
 - **Data science** – to quickly produce a clean, consistent dataset for modelling.
 - **Data quality audits** – to assess and document the extent of issues in a dataset.
 - **Operational reporting** – ensures dashboards receive cleansed data.
-
 By automating these common data cleaning tasks, the tool saves hours of manual work and provides complete transparency into what changes were made.
 
+
 ---
+
+📊 Pipeline Architecture Blueprint
+[ Messy Input File ]  --->  (CSV, TSV, or corrupted text stream)
+           │
+           ▼
+┌────────────────────────────────────────────────────────┐
+│  PHASE 1: PRE-PARSE ANALYSIS                           │
+│  ├── Codec Sniffing (chardet) -> [utf-8 / latin-1]     │
+│  └── Layout Inferences (csv.Sniffer) -> [ , | \t ]     │
+└───────────────────────┬────────────────────────────────┘
+                        │
+                        ▼
+┌────────────────────────────────────────────────────────┐
+│  PHASE 2: ROBUST STREAM PARSING                        │
+│  └── Isolated Line Filter (on_bad_lines)               │
+└───────────────────────┬────────────────────────────────┘
+                        │  Dropped Malformed Lines Logged
+                        ▼
+┌────────────────────────────────────────────────────────┐
+│  PHASE 3: HEADER SANITIZATION                          │
+│  └── Regex Trimming -> [ clean_snake_case_labels ]     │
+└───────────────────────┬────────────────────────────────┘
+                        │
+                        ▼
+┌────────────────────────────────────────────────────────┐
+│  PHASE 4: METRICS PROFILING AUDIT                      │
+│  └── Telemetry Scan -> Computes Baseline Null Ratios   │
+└───────────────────────┬────────────────────────────────┘
+                        │
+                        ▼
+┌────────────────────────────────────────────────────────┐
+│  PHASE 5: AUTOMATED TRANSFORMATION ENGINE              │
+│  ├── Column Pruning (Drop Threshold Evaluation)       │
+│  ├── Missing Value Imputation (Median / Mode)          │
+│  ├── Duplication Scoring (Context-Key Constraints)     │
+│  ├── Outlier Winsorization (IQR / Z-Score Clipping)    │
+│  └── Fuzzy Text Normalization (Levenshtein 85% Match)  │
+└───────────────────────┬────────────────────────────────┘
+                        │
+                        ▼
+┌────────────────────────────────────────────────────────┐
+│  PHASE 6: OPERATIONAL ARTIFACT GENERATION              │
+│  ├── Pristine Output Flat Table (.csv)                 │
+│  └── Comprehensive JSON Diagnostic Ledger              │
+└────────────────────────────────────────────────────────┘
+           │
+           ├──> [ master_clean_dataset.csv ]
+           └──> [ master_clean_dataset_report.json ]
 
 ## License
 
