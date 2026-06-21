@@ -1,32 +1,42 @@
 # Data Quality Cleaning Pipeline
 
-A production‑grade, automated data quality cleaning tool for messy CSV files.  
-It detects file structure, handles missing values, outliers, duplicates, string inconsistencies, and date logic errors – all while producing a detailed audit report.
+**Automated, production‑ready data cleaning for messy CSV files**  
+Detect file structure, fix missing values, outliers, duplicates, text inconsistencies, and date logic errors – all with a single command and a full audit trail.
 
 ---
 
 ## Description
 
-This Python script provides a complete data cleaning pipeline for enterprise datasets. It handles:
+This Python tool implements a **complete, end‑to‑end data cleaning pipeline** for enterprise‑grade CSV datasets. It is designed to handle the real‑world messiness you find in raw data: inconsistent encodings, malformed lines, varied null representations, mixed casing, duplicate records, extreme outliers, and even chronological impossibilities.
 
-- Automatic encoding and delimiter detection.
-- Robust parsing with malformed‑line skipping.
-- Header sanitisation (snake_case, duplicate handling).
-- Comprehensive metrics (null ratios, whitespace, outliers, data types).
-- Intelligent imputation, column dropping, deduplication, outlier capping, string standardisation, fuzzy grouping, and chronological validation.
-- JSON report summarising every transformation.
+The pipeline operates in six distinct phases:
 
-The tool is designed for production use, with configurable thresholds and methods.
+1. **Pre‑Parse** – Automatically detects file encoding (using `chardet`) and delimiter (using `csv.Sniffer`). Checks delimiter consistency and warns about potential issues.
+2. **Parse** – Loads the data robustly, skipping malformed lines without crashing.
+3. **Header Sanitisation** – Cleans column names (whitespace, snake_case, duplicate handling).
+4. **Metrics Computation** – Calculates null ratios, whitespace errors, outlier counts, and data types per column.
+5. **Cleaning Logic** – Applies configurable transformations:
+   - Replace custom null placeholders with `NaN`.
+   - Drop columns with excessive nulls, impute others (median for numeric, mode for categorical).
+   - Add quality‑flag columns for moderate null rates.
+   - Remove duplicates (optionally using a primary key).
+   - Cap outliers using IQR or Z‑score.
+   - Standardise string casing and merge similar variants via fuzzy matching.
+   - Validate and correct date order (e.g., ensure end date ≥ start date).
+6. **Output** – Saves a cleaned CSV and a detailed JSON report with every transformation logged.
+
+All steps are fully configurable via command‑line arguments, making the tool adaptable to any dataset and business rule.
 
 ---
 
 ## Features
 
-- **Zero‑configuration start** – just provide an input file and the tool figures out the rest.
-- **Full transparency** – every change is logged and recorded in a JSON report.
-- **Flexible configuration** – override encoding, delimiter, thresholds, outlier methods, and more via command line.
-- **Handles large datasets** – uses efficient pandas operations.
-- **No external dependencies** beyond standard data science libraries.
+- **Zero‑configuration start** – Just point to a CSV; the tool auto‑detects encoding, delimiter, and applies sensible defaults.
+- **Complete transparency** – Every change (dropped columns, imputed values, capped outliers, merged strings, etc.) is recorded in a human‑readable JSON report.
+- **Highly configurable** – Override thresholds, outlier methods, null placeholders, date formats, primary keys, and more.
+- **Handles large datasets** – Built on `pandas` and `numpy`, efficient for millions of rows.
+- **No external dependencies** – Only requires `pandas`, `numpy`, and `chardet` – all standard in the data science ecosystem.
+- **Production‑ready** – Logging, error handling, and clear exit codes make it suitable for automated pipelines.
 
 ---
 
@@ -35,14 +45,15 @@ The tool is designed for production use, with configurable thresholds and method
 ### Prerequisites
 
 - Python 3.6 or higher
-- pip
+- `pip` (Python package installer)
 
-### Required packages
+### Required Packages
 
-Install with:
+Install the dependencies with:
 
 ```bash
 pip install pandas numpy chardet
+
 
 Or use a `requirements.txt`:
 
