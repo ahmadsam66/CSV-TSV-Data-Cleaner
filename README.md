@@ -1,12 +1,12 @@
 ```markdown
-# Data Quality Cleaning Pipeline
+#Data Quality Cleaning Pipeline
 
 A production‑grade automated data quality cleaning tool built in Python.  
 It ingests messy CSV files, performs a comprehensive set of cleaning and transformation steps, and outputs a cleaned dataset along with a detailed JSON report of all changes made.
 
 ---
 
-## Description
+##Description
 
 This tool is designed to handle real‑world, “dirty” enterprise datasets. It automates the following tasks:
 
