@@ -1,4 +1,3 @@
-```markdown
 # Data Quality Cleaning Pipeline
 
 A production‑grade, automated data quality cleaning tool for messy CSV files.  
@@ -44,7 +43,6 @@ Install with:
 
 ```bash
 pip install pandas numpy chardet
-```
 
 Or use a `requirements.txt`:
 
